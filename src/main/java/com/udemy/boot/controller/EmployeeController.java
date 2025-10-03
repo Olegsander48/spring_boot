@@ -6,6 +6,7 @@ import com.udemy.boot.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -23,11 +24,11 @@ public class EmployeeController {
 
     @GetMapping("/employees/{id}")
     public Employee getEmployee(@PathVariable int id) {
-        Employee employee = employeeService.findById(id);
-        if (employee == null) {
+        Optional<Employee> employee = employeeService.findById(id);
+        if (employee.isEmpty()) {
             throw new NoSuchEmployeeException("There is no employee with id: " + id);
         }
-        return employee;
+        return employee.get();
     }
 
     @PostMapping("/employees")
@@ -44,8 +45,8 @@ public class EmployeeController {
 
     @DeleteMapping("/employees/{id}")
     public String deleteEmployee(@PathVariable int id) {
-        Employee employee = employeeService.findById(id);
-        if (employee == null) {
+        Optional<Employee> employee = employeeService.findById(id);
+        if (employee.isEmpty()) {
             throw new NoSuchEmployeeException("There is no employee with id: " + id);
         }
         employeeService.remove(id);
